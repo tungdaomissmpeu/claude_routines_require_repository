@@ -21,6 +21,6 @@ Use the Bash tool to check, do not answer from memory.
 Notes:
 
 - A source repo is required even when the prompt does not need it.
-  Prefer a public repo with no secrets to avoid `github_repo_access_denied` errors
-  (private repos need the Claude GitHub integration authorized for that org).
+  Prefer a public repo to skip GitHub auth setup;
+  private repos need the Claude GitHub integration authorized.
 - Why the prompt is so strict: Haiku is dumb, needs specific instructions.
