@@ -2,7 +2,8 @@ Dummy repository to run Claude routines
 
 
 The following sets up a workaround so I can reduce waiting time
-between Claude's 5-hour limit windows:
+between Claude's 5-hour limit windows.
+Ask in any Claude Code session:
 
 ```
 /schedule create 3 routines:
