@@ -1,0 +1,37 @@
+---
+name: sql-formatting
+description: SQL formatting and style rules. Use when writing or editing SQL queries or migrations.
+---
+
+# SQL Formatting Rules
+
+- Use a space before opening and after closing parentheses
+- Use consistent indentation (4 spaces)
+- If a clause is broken across lines, indent subordinate parts one additional level
+- Align columns and assignments within the same clause
+- Avoid vague or abbreviated column names.
+- If a column name may be unclear, clarify its meaning with a comment
+  (based on the definition in documentation or related code).
+
+## Example
+
+```
+CREATE TABLE users
+(
+    id    INTEGER PRIMARY KEY,
+    email TEXT    NOT NULL,
+    ts    INTEGER NOT NULL -- created timestamp
+);
+
+UPDATE users
+SET email = 'alice@example.com',
+    name  = 'Alice'
+WHERE id = 1
+    AND active = TRUE;
+
+INSERT INTO users (email)
+VALUES ('alice@example.com')
+ON CONFLICT (email)
+    DO UPDATE
+    SET email = excluded.email;
+```

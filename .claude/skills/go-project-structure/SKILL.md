@@ -1,0 +1,61 @@
+---
+name: go-project-structure
+description: Go project directory layout and package conventions. Use when creating, organizing, or refactoring Go files, packages, features, or functions.
+---
+
+# Go Project Structure
+
+Follow this layout when adding or organizing code for Go services and applications.
+
+## Directory Layout
+
+| Directory     | Purpose                                                                                           |
+|---------------|---------------------------------------------------------------------------------------------------|
+| `cmd/{app}/`  | Loads config from env, wires dependencies, starts the app                                         |
+| `pkg/model/`  | Domain data structures and related errors (for cross-package error matching).                     |
+| `pkg/logic/`  | Business logic, interfaces. Testable without external dependencies.                               |
+| `pkg/driver/` | Implements interfaces for external interactions (HTTP, database, third-party APIs, etc.)          |
+| `pkg/base/`   | Shared pure utilities with no business logic (logger, uuid, ...). Can be imported by any package. |
+| `config/`     | Configuration files. `.env.example` lists env vars to configure.                                  |
+| `web/`        | Optional simple UI if needed. Served with the API. JS calls API by relative paths.                |
+| `doc/`        | Design docs, user guides, tech specs, algorithms, API specs                                       |
+
+## Conventions
+
+### `cmd/`
+
+Contains the main service executable and any optional one-off scripts,
+one subdirectory each.
+
+The subdirectory name determines the default binary name from `go build`,
+so use a meaningful name rather than something generic like `main`.
+
+Multi-word executable names use hyphens, following common CLI conventions,
+for example `script-import-data`.
+
+Source file names use `snake_case`, following Go conventions,
+for example `script_import_data.go`.
+
+### `pkg/model/`
+
+- Keep everything in a single `model.go` file, or split into one file per entity if it grows
+  too large (e.g. `product.go` containing the `Product` struct and its related errors).
+
+### `pkg/logic/`
+
+- `interface.go`: Defines interfaces for infrastructure and external dependencies.
+- `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented
+  (use `MockSomething` naming for both stubs and mocks).
+- `app.go`: The `App` struct holds all dependencies.
+  Business logic is implemented as methods on `App`,
+  or as methods on smaller structs that contain only the dependencies they need from `App`.
+- Must be testable without external setup.
+- Must not import any `driver` packages.
+- Depends on interfaces, not concrete implementations.
+
+### `pkg/driver/`
+
+- Implements the interfaces defined in `pkg/logic/interface.go`.
+- One subpackage per external concern:
+  `database/`, `httpsvr/`, `external_provider/`, etc.
+- `database/` also contains SQL migrations.
